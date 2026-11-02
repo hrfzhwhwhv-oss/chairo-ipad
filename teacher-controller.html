@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ちゃいろのこびん 先生コントローラー</title>
+  <meta name="theme-color" content="#fffaf0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="teacher-style.css">
+</head>
+<body>
+  <main class="teacher-app">
+    <header class="teacher-header">
+      <span>🏺</span>
+      <div>
+        <h1>ちゃいろのこびん</h1>
+        <p>せんせい コントローラー</p>
+      </div>
+      <span>🏺</span>
+    </header>
+
+    <section class="status-card">
+      <div class="status-dot" id="statusDot"></div>
+      <div>
+        <strong>Mac親機コントローラー</strong>
+        <p><span id="connectedCount">0</span> 台の生徒画面を確認中</p>
+        <p id="statusText">生徒画面を別タブで開いて、同期を確認できます</p>
+        <p id="syncQuality" class="sync-quality">同期時計を準備中…</p>
+      </div>
+    </section>
+
+    <section class="transport-card">
+      <button id="allStart" class="big-button start">▶ みんな スタート</button>
+      <button id="allPause" class="big-button pause">⏸ みんな いちじていし</button>
+      <button id="allStop" class="big-button stop">⏹ みんな ストップ</button>
+    </section>
+
+    <section class="settings-grid">
+      <div class="setting-card">
+        <h2>はやさ</h2>
+        <div class="choice-row">
+          <button class="speed-choice" data-speed="1050">🐢 ゆっくり</button>
+          <button class="speed-choice selected" data-speed="700">🚶 ふつう</button>
+          <button class="speed-choice" data-speed="500">🏃 はやく</button>
+        </div>
+      </div>
+
+      <div class="setting-card">
+        <h2>せんせい伴奏</h2>
+        <button id="teacherAccompaniment" class="accompaniment-choice selected">
+          🎹 伴奏 ON
+        </button>
+        <p>生徒画面の伴奏ON/OFFをそろえます</p>
+      </div>
+    </section>
+
+    <section class="test-card">
+      <h2>家での確認方法</h2>
+      <p>この先生画面とは別のタブで「ちゃいろのこびん」の生徒画面を開きます。先生画面のボタンを押して、生徒画面が同時に動けば第1段階成功です。</p>
+      <a href="./index.html" target="_blank" rel="noopener">生徒画面を別タブで開く</a>
+    </section>
+
+    <footer>
+      <p>※この第1段階は同じ端末内の同期テスト用です。複数iPad同時接続は次の段階で追加します。</p>
+    </footer>
+  </main>
+
+  <script src="sync.js"></script>
+  <script src="network-sync.js"></script>
+  <script src="teacher-controller.js"></script>
+</body>
+</html>

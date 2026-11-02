@@ -1,0 +1,1047 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: #fffaf0;
+  color: #3f3f3f;
+  font-family: "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic", sans-serif;
+}
+
+button { font-family: inherit; }
+
+.app {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 24px;
+  background: #fffdf8;
+  border: 5px solid #dfc69c;
+  border-radius: 32px;
+  box-shadow: 0 8px 20px rgba(90, 65, 35, 0.15);
+}
+
+.title-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.title-area h1 {
+  margin: 0;
+  color: #5d3a25;
+  font-size: clamp(34px, 5vw, 58px);
+  letter-spacing: 0.08em;
+}
+
+.bottle { font-size: clamp(38px, 5vw, 60px); }
+
+.instrument-area, .mode-area {
+  margin-bottom: 18px;
+  padding: 16px;
+  border-radius: 24px;
+}
+
+.instrument-area {
+  background: #eaf7ee;
+  border: 4px solid #92c99e;
+}
+
+.mode-area {
+  background: #f4efff;
+  border: 4px solid #b9a0df;
+}
+
+.mode-title {
+  margin: 0 0 12px;
+  text-align: center;
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.mode-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.instrument-button, .part-button {
+  min-height: 56px;
+  padding: 10px 22px;
+  background: white;
+  border: 4px solid #9877c4;
+  border-radius: 18px;
+  color: #553d75;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.instrument-button { border-color: #69a978; color: #356540; }
+
+.instrument-button:active, .part-button:active { transform: scale(0.97); }
+
+.selected-mode {
+  background: #fff2a8;
+  border-color: #e2b83f;
+  color: #5c4913;
+  box-shadow: 0 0 0 5px rgba(255, 202, 42, 0.25);
+}
+
+.mode-message {
+  margin: 14px 0 0;
+  text-align: center;
+  color: #615274;
+  font-size: 19px;
+  font-weight: bold;
+}
+
+.hidden { display: none; }
+
+.main-panel {
+  display: grid;
+  grid-template-columns: 230px 1fr 220px;
+  gap: 22px;
+}
+
+.controls, .note-area, .waiting-area, .melody-area, .xylophone-area {
+  border-radius: 24px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  background: #e7f5ff;
+  border: 4px solid #9bcce8;
+}
+
+.controls button {
+  min-height: 54px;
+  padding: 10px;
+  background: white;
+  border: 3px solid #76a9c7;
+  border-radius: 16px;
+  color: #385b70;
+  font-size: 19px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.controls .start-button {
+  background: #fff3a9;
+  border-color: #e0b94f;
+  color: #624d11;
+}
+
+.controls .selected {
+  background: #fff7ce;
+  outline: 5px solid rgba(255, 193, 7, 0.35);
+}
+
+.control-title {
+  margin: 8px 0 0;
+  text-align: center;
+  font-size: 21px;
+  font-weight: bold;
+}
+
+.note-area {
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff6cf;
+  border: 5px solid #edcc51;
+}
+
+.small-message {
+  margin: 0 0 10px;
+  text-align: center;
+  font-size: clamp(20px, 2.5vw, 30px);
+  font-weight: bold;
+}
+
+.current-note {
+  min-width: 210px;
+  padding: 18px 35px;
+  border: 6px solid rgba(255,255,255,.95);
+  border-radius: 35px;
+  text-align: center;
+  font-size: clamp(90px, 14vw, 175px);
+  font-weight: bold;
+  line-height: 1;
+  box-shadow: 0 0 0 5px rgba(80,80,80,.12), 0 8px 18px rgba(80,60,20,.18);
+  transition: transform .2s, filter .2s;
+}
+
+.current-note.flash { transform: scale(1.1); filter: brightness(1.1); }
+
+.waiting-area {
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #e9f8e4;
+  border: 5px solid #91c87c;
+}
+
+.waiting-area.playing {
+  background: #fff1bf;
+  border-color: #efbd4c;
+}
+
+.face { font-size: 82px; }
+
+.waiting-area p {
+  margin: 12px 0 0;
+  padding: 0 10px;
+  text-align: center;
+  font-size: 29px;
+  font-weight: bold;
+}
+
+.melody-area {
+  margin-top: 22px;
+  padding: 18px;
+  background: #fff8e4;
+  border: 4px solid #e3c995;
+}
+
+.section-title {
+  margin: 0 0 14px;
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.melody {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px 4px 18px;
+}
+
+.melody-note {
+  flex: 0 0 76px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid rgba(50,50,50,.2);
+  border-radius: 18px;
+  font-size: 25px;
+  font-weight: bold;
+  opacity: .55;
+  transition: transform .2s, opacity .2s;
+}
+
+.melody-note.current {
+  opacity: 1;
+  transform: scale(1.16);
+  border-color: #343434;
+  box-shadow: 0 0 0 5px rgba(255,210,60,.35);
+}
+
+.melody-note.finished { opacity: .25; }
+
+.rest-note { background: white; color: #777; }
+
+.xylophone-area {
+  margin-top: 22px;
+  padding: 20px;
+  background: #edf8ff;
+  border: 4px solid #a8d1e9;
+}
+
+.high-label {
+  margin: 5px 0 4px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.high-xylophone, .xylophone {
+  display: flex;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 5px;
+  overflow-x: auto;
+}
+
+.xylophone { min-height: 250px; align-items: center; }
+
+.xylophone-key {
+  width: 105px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 5px 18px;
+  border: 5px solid rgba(70,70,70,.25);
+  border-radius: 18px;
+  text-align: center;
+  font-size: clamp(20px, 2.6vw, 31px);
+  font-weight: bold;
+  box-shadow: 0 8px 0 rgba(80,80,80,.15);
+  transition: transform .2s, filter .2s;
+}
+
+.high-key { width: 90px; height: 105px; padding-bottom: 12px; font-size: 23px; }
+
+.xylophone-key.active {
+  transform: translateY(-16px) scale(1.08);
+  filter: brightness(1.2);
+  border-color: white;
+  box-shadow: 0 0 0 6px #343434, 0 0 25px rgba(255,215,70,.9);
+}
+
+.key-do { height: 220px; background: #f35b5b; }
+.key-re { height: 205px; background: #f59b45; }
+.key-mi { height: 190px; background: #f5d84c; }
+.key-fa { height: 175px; background: #61c875; }
+.key-so { height: 160px; background: #69cde6; }
+.key-la { height: 145px; background: #3475d1; color: white; }
+.key-si { height: 130px; background: #a266c7; color: white; }
+
+.high-key.key-do, .high-key.key-re, .high-key.key-mi { height: 105px; }
+
+.note-do { background: #f35b5b; }
+.note-re { background: #f59b45; }
+.note-mi { background: #f5d84c; }
+.note-fa { background: #61c875; }
+.note-fs { background: #347a43; color: white; }
+.note-so { background: #69cde6; }
+.note-la { background: #3475d1; color: white; }
+.note-si { background: #a266c7; color: white; }
+
+.bottom-message {
+  margin: 10px 0 0;
+  text-align: center;
+  color: #346c9b;
+  font-size: clamp(22px, 3vw, 34px);
+  font-weight: bold;
+}
+
+
+.bass-area {
+  margin-top: 22px;
+  padding: 20px;
+  background: #f3f1ed;
+  border: 4px solid #aaa39a;
+  border-radius: 24px;
+}
+
+.piano {
+  min-height: 280px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  padding: 25px 10px;
+  overflow-x: auto;
+}
+
+.white-key {
+  width: 120px;
+  height: 240px;
+  flex: 0 0 120px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 20px;
+  background: white;
+  border: 5px solid #444;
+  border-radius: 0 0 18px 18px;
+  font-size: 31px;
+  font-weight: bold;
+  transition: .2s;
+}
+
+.piano-key-group {
+  position: relative;
+  width: 120px;
+  height: 240px;
+  flex: 0 0 120px;
+}
+
+.piano-key-group .white-key {
+  position: absolute;
+  inset: 0;
+}
+
+.black-key {
+  position: absolute;
+  z-index: 2;
+  width: 72px;
+  height: 145px;
+  right: -40px;
+  top: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 14px;
+  background: #333;
+  color: white;
+  border: 4px solid #111;
+  border-radius: 0 0 12px 12px;
+  font-size: 20px;
+  font-weight: bold;
+  transition: .2s;
+}
+
+.white-key.active-bass,
+.black-key.active-bass {
+  transform: translateY(-12px) scale(1.06);
+  filter: brightness(1.2);
+  box-shadow: 0 0 0 7px #ffd84c, 0 0 28px rgba(255,215,70,.9);
+}
+
+@media (max-width: 850px) {
+  body { padding: 8px; }
+  .app { padding: 14px; }
+  .mode-buttons { flex-direction: column; }
+  .main-panel { grid-template-columns: 1fr; }
+  .controls { display: grid; grid-template-columns: repeat(2, 1fr); }
+  .control-title { grid-column: 1 / -1; }
+  .waiting-area { display: none; }
+  .piano { justify-content: flex-start; }
+}
+
+.controls .accompaniment-button { background:#fff3a9; border-color:#e0b94f; color:#624d11; }
+.controls .accompaniment-button.off { background:white; border-color:#aaa; color:#666; outline:none; }
+.accompaniment-status { margin:-5px 0 4px; text-align:center; font-size:14px; font-weight:bold; color:#6b6257; }
+
+.timbre-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.controls .timbre-button {
+  min-height: 48px;
+  padding: 7px 5px;
+  background: white;
+  border: 3px solid #9aa7b0;
+  border-radius: 14px;
+  color: #48545c;
+  font-size: 15px;
+  font-weight: bold;
+}
+.controls .timbre-button.selected-timbre {
+  background: #fff3a9;
+  border-color: #e0b94f;
+  color: #624d11;
+  outline: 4px solid rgba(255,193,7,.25);
+}
+
+.instrument-hidden { display:none !important; }
+
+.selection-area{
+ display:grid;grid-template-columns:1fr 2px 1.35fr;align-items:center;gap:14px;
+ margin-bottom:10px;padding:10px 14px;background:#eef8ee;border:3px solid #a8cfa8;border-radius:18px
+}
+.selection-divider{width:2px;height:70px;background:#c8ddc4}
+.selection-area .mode-title{margin:0 0 7px;font-size:18px}
+.selection-area .mode-buttons{flex-wrap:nowrap;gap:8px}
+.selection-area .instrument-button,.selection-area .part-button{
+ min-height:44px;padding:7px 12px;border-width:2px;border-radius:12px;font-size:16px;white-space:nowrap
+}
+.selection-area .mode-message{display:none}
+
+@media (orientation:landscape) and (min-width:850px){
+ body{padding:6px}
+ .app{width:min(1500px,100%);padding:10px 14px;border-width:3px;border-radius:22px}
+ .title-area{margin-bottom:8px}
+ .title-area h1{font-size:42px}
+ .bottle{font-size:40px}
+ .main-panel{grid-template-columns:185px minmax(0,1fr) 210px;gap:12px}
+ .controls{gap:7px;padding:10px}
+ .controls button{min-height:38px;padding:5px;font-size:15px}
+ .control-title{margin:3px 0 0;font-size:16px}
+ .accompaniment-status{font-size:11px;line-height:1.25}
+ .note-area,.waiting-area{min-height:255px}
+ .small-message{font-size:20px}
+ .current-note{min-width:130px;padding:8px 22px;font-size:76px}
+ .face{font-size:56px}.waiting-area p{font-size:22px}
+ .melody-area{margin-top:10px;padding:7px 10px}
+ .section-title{margin-bottom:4px;font-size:18px}
+ .melody{gap:6px;padding:3px 2px 7px}
+ .melody-note{flex-basis:55px;height:48px;font-size:17px;border-width:2px;border-radius:10px}
+ .xylophone-area,.bass-area{margin-top:10px;padding:8px 12px}
+ .high-label{font-size:14px;margin:0}
+ .high-xylophone,.xylophone{gap:7px;padding:3px}
+ .xylophone{min-height:125px;align-items:flex-end}
+ .xylophone-key{width:68px;padding:0 3px 8px;border-width:3px;border-radius:12px;font-size:20px}
+ .high-key{width:58px;height:52px!important;padding-bottom:5px;font-size:16px}
+ .key-do{height:105px}.key-re{height:98px}.key-mi{height:91px}.key-fa{height:84px}
+ .key-so{height:77px}.key-la{height:70px}.key-si{height:63px}
+ .bottom-message{margin-top:4px;font-size:18px}
+ .piano{min-height:0;padding:5px;gap:0}
+ .white-key{width:76px;height:112px;flex-basis:76px;padding-bottom:8px;border-width:3px;font-size:19px}
+ .piano-key-group{width:76px;height:112px;flex-basis:76px}
+ .black-key{width:46px;height:70px;right:-24px;padding-bottom:5px;border-width:2px;font-size:13px}
+}
+
+
+/* ===== 鍵盤を1列に統一 ===== */
+.single-key-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 7px;
+  padding: 8px 4px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.single-key-row .xylophone-key {
+  width: 68px;
+  height: 92px !important;
+  flex: 0 0 68px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-width: 3px;
+  border-radius: 12px;
+  font-size: 20px;
+}
+
+.single-key-row .high-inline {
+  height: 92px !important;
+}
+
+.single-key-row .bell-key {
+  width: 78px;
+  height: 92px !important;
+  flex-basis: 78px;
+}
+
+@media (orientation: landscape) and (min-width: 850px) {
+  .xylophone-area {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .single-key-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 1100px) and (orientation: landscape) {
+  .single-key-row .xylophone-key {
+    width: 58px;
+    flex-basis: 58px;
+    font-size: 18px;
+  }
+
+  .single-key-row .bell-key {
+    width: 68px;
+    flex-basis: 68px;
+  }
+}
+
+
+/* 楽器切替：選んでいない鍵盤列は必ず非表示 */
+.single-key-row.hidden {
+  display: none !important;
+}
+
+
+/* ===== 「ひかる ところの おとを たたこう！」を大きく、余白を少なく ===== */
+.xylophone-area,
+.bass-area {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+
+.single-key-row {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+.bottom-message {
+  margin: 2px 0 0 !important;
+  padding: 4px 8px !important;
+  font-size: clamp(26px, 2.7vw, 34px) !important;
+  line-height: 1.1 !important;
+  font-weight: 800 !important;
+}
+
+@media (orientation: landscape) and (min-width: 850px) {
+  .bottom-message {
+    font-size: 30px !important;
+  }
+}
+
+
+/* ===== 音階（ど・れ・み…）を大きく見やすく ===== */
+.single-key-row .xylophone-key {
+  font-size: 30px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+}
+
+.single-key-row .high-inline {
+  font-size: 27px !important;
+}
+
+.single-key-row .bell-key {
+  font-size: 30px !important;
+  font-weight: 800 !important;
+}
+
+/* ベース鍵盤の音名も少し大きく */
+.white-key {
+  font-size: 25px !important;
+  font-weight: 800 !important;
+}
+
+.black-key {
+  font-size: 17px !important;
+  font-weight: 800 !important;
+}
+
+@media (max-width: 1100px) and (orientation: landscape) {
+  .single-key-row .xylophone-key {
+    font-size: 26px !important;
+  }
+
+  .single-key-row .high-inline {
+    font-size: 23px !important;
+  }
+
+  .single-key-row .bell-key {
+    font-size: 26px !important;
+  }
+
+  .white-key {
+    font-size: 22px !important;
+  }
+
+  .black-key {
+    font-size: 15px !important;
+  }
+}
+
+
+/* ===== 中央の案内文字を大きくする（余白は維持） ===== */
+.note-area .small-message {
+  font-size: clamp(30px, 3.4vw, 46px) !important;
+  line-height: 1.15 !important;
+  font-weight: 800 !important;
+  margin-bottom: 12px !important;
+}
+
+/* 大きな現在音も少しだけ拡大 */
+.note-area .current-note {
+  font-size: clamp(92px, 9vw, 138px) !important;
+  min-width: 190px !important;
+  padding: 14px 34px !important;
+}
+
+/* iPad横向きでは十分大きく見えるよう固定値を強めに */
+@media (orientation: landscape) and (min-width: 850px) {
+  .note-area .small-message {
+    font-size: 38px !important;
+  }
+
+  .note-area .current-note {
+    font-size: 112px !important;
+  }
+}
+
+
+/* ===== 下段鍵盤：見出しを省き、光った時に上が切れないよう調整 ===== */
+#colorInstrumentArea #keyAreaTitle {
+  display: none !important;
+}
+
+#colorInstrumentArea {
+  overflow: visible !important;
+}
+
+#colorInstrumentArea .single-key-row {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  padding-top: 14px !important;
+  margin-top: 0 !important;
+}
+
+#colorInstrumentArea .xylophone-key {
+  overflow: visible !important;
+}
+
+/* 光って少し大きくなる時の上側スペースを確保 */
+#colorInstrumentArea .xylophone-key.active-key,
+#colorInstrumentArea .xylophone-key.active {
+  transform-origin: center center !important;
+}
+
+@media (orientation: landscape) and (min-width: 850px) {
+  #colorInstrumentArea .single-key-row {
+    padding-top: 16px !important;
+  }
+}
+
+
+/* ===== iPad横向き：実機1画面収まり調整 ===== */
+@media (orientation: landscape) and (min-width: 850px) {
+  body {
+    padding: 3px !important;
+  }
+
+  .app {
+    width: min(1500px, 100%) !important;
+    padding: 6px 10px !important;
+    border-width: 2px !important;
+    border-radius: 18px !important;
+  }
+
+  /* 上部タイトルを少しだけ圧縮 */
+  .title-area {
+    margin-bottom: 4px !important;
+    gap: 8px !important;
+  }
+
+  .title-area h1 {
+    font-size: 34px !important;
+    line-height: 1 !important;
+  }
+
+  .bottle {
+    font-size: 30px !important;
+  }
+
+  /* 楽器・パート選択 */
+  .selection-area {
+    margin-bottom: 6px !important;
+    padding: 6px 10px !important;
+    gap: 10px !important;
+    border-width: 2px !important;
+    border-radius: 14px !important;
+  }
+
+  .selection-divider {
+    height: 54px !important;
+  }
+
+  .selection-area .mode-title {
+    margin-bottom: 4px !important;
+    font-size: 15px !important;
+    line-height: 1 !important;
+  }
+
+  .selection-area .instrument-button,
+  .selection-area .part-button {
+    min-height: 36px !important;
+    padding: 4px 9px !important;
+    font-size: 13px !important;
+    border-width: 2px !important;
+    border-radius: 10px !important;
+  }
+
+  /* 以前の大きな最小高さを解除 */
+  .main-panel {
+    min-height: 0 !important;
+    grid-template-columns: 170px minmax(0,1fr) 185px !important;
+    gap: 8px !important;
+  }
+
+  /* 左側操作パネル */
+  .controls {
+    gap: 4px !important;
+    padding: 7px !important;
+    border-width: 2px !important;
+    border-radius: 14px !important;
+  }
+
+  .controls button {
+    min-height: 30px !important;
+    padding: 3px 5px !important;
+    font-size: 12px !important;
+    border-width: 2px !important;
+    border-radius: 9px !important;
+  }
+
+  .control-title {
+    margin: 2px 0 0 !important;
+    font-size: 13px !important;
+    line-height: 1.05 !important;
+  }
+
+  .accompaniment-status {
+    margin: -1px 0 0 !important;
+    font-size: 9px !important;
+    line-height: 1.15 !important;
+  }
+
+  /* 中央は見やすさを保ち、余白だけ圧縮 */
+  .note-area {
+    min-height: 0 !important;
+    padding: 8px 10px !important;
+    border-width: 3px !important;
+    border-radius: 15px !important;
+    justify-content: center !important;
+  }
+
+  .note-area .small-message {
+    font-size: 32px !important;
+    margin: 0 0 7px !important;
+    line-height: 1.05 !important;
+  }
+
+  .note-area .current-note {
+    font-size: 104px !important;
+    min-width: 175px !important;
+    padding: 9px 28px !important;
+    border-width: 4px !important;
+    border-radius: 22px !important;
+  }
+
+  .waiting-area {
+    min-height: 0 !important;
+    padding: 6px !important;
+    border-width: 3px !important;
+    border-radius: 15px !important;
+  }
+
+  .face {
+    font-size: 46px !important;
+  }
+
+  .waiting-area p {
+    margin-top: 4px !important;
+    font-size: 18px !important;
+  }
+
+  /* おとのならび */
+  .melody-area {
+    margin-top: 6px !important;
+    padding: 4px 8px !important;
+    border-width: 2px !important;
+    border-radius: 12px !important;
+  }
+
+  .section-title {
+    margin-bottom: 2px !important;
+    font-size: 15px !important;
+    line-height: 1 !important;
+  }
+
+  .melody {
+    gap: 4px !important;
+    padding: 2px 1px 4px !important;
+  }
+
+  .melody-note {
+    flex-basis: 46px !important;
+    height: 38px !important;
+    font-size: 14px !important;
+    border-width: 2px !important;
+    border-radius: 8px !important;
+  }
+
+  /* 最下部の楽器鍵盤を1画面内へ */
+  .xylophone-area,
+  .bass-area {
+    margin-top: 5px !important;
+    padding: 4px 8px !important;
+    border-width: 2px !important;
+    border-radius: 12px !important;
+  }
+
+  #colorInstrumentArea .single-key-row {
+    padding-top: 10px !important;
+    padding-bottom: 2px !important;
+    gap: 5px !important;
+  }
+
+  .single-key-row .xylophone-key {
+    width: 58px !important;
+    height: 70px !important;
+    flex-basis: 58px !important;
+    font-size: 25px !important;
+    border-width: 2px !important;
+    border-radius: 10px !important;
+  }
+
+  .single-key-row .high-inline {
+    font-size: 21px !important;
+  }
+
+  .single-key-row .bell-key {
+    width: 66px !important;
+    height: 70px !important;
+    flex-basis: 66px !important;
+    font-size: 25px !important;
+  }
+
+  .bottom-message {
+    margin-top: 1px !important;
+    padding: 1px 5px !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+  }
+
+  .piano {
+    padding: 2px !important;
+  }
+
+  .white-key {
+    width: 68px !important;
+    height: 86px !important;
+    flex-basis: 68px !important;
+    padding-bottom: 5px !important;
+    font-size: 20px !important;
+    border-width: 2px !important;
+  }
+
+  .piano-key-group {
+    width: 68px !important;
+    height: 86px !important;
+    flex-basis: 68px !important;
+  }
+
+  .black-key {
+    width: 40px !important;
+    height: 54px !important;
+    right: -21px !important;
+    padding-bottom: 3px !important;
+    font-size: 13px !important;
+    border-width: 2px !important;
+  }
+}
+
+
+.sound-check-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin: 0 0 4px;
+  min-height: 34px;
+}
+
+.sound-check-button {
+  padding: 4px 12px;
+  border: 2px solid #e0b94f;
+  border-radius: 10px;
+  background: #fff3a9;
+  color: #624d11;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.sound-check-button.ready {
+  background: #e9f8eb;
+  border-color: #65ad72;
+  color: #356540;
+}
+
+#soundCheckStatus {
+  font-size: 11px;
+  font-weight: 800;
+  color: #506775;
+}
+
+@media (orientation: landscape) and (min-width: 850px) {
+  .sound-check-area {
+    min-height: 27px;
+    margin-bottom: 2px;
+  }
+  .sound-check-button {
+    padding: 2px 9px;
+    font-size: 12px;
+  }
+  #soundCheckStatus {
+    font-size: 10px;
+  }
+}
+
+
+.student-audio-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 0 4px;
+  padding: 3px 8px;
+  border: 2px solid #b9a0df;
+  border-radius: 10px;
+  background: #f7f1ff;
+  color: #553d75;
+  font-size: 12px;
+}
+
+.student-audio-notice strong {
+  font-weight: 900;
+}
+
+@media (orientation: landscape) and (min-width: 850px) {
+  .student-audio-notice {
+    font-size: 10px;
+    line-height: 1.1;
+    padding: 2px 6px;
+    margin-bottom: 2px;
+  }
+}
+
+
+/* ===== 練習 / 合奏モード v2 ===== */
+.lesson-mode-area {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  margin:0 0 4px;
+  padding:3px 7px;
+  background:#f7f1ff;
+  border:2px solid #b9a0df;
+  border-radius:10px;
+}
+.lesson-mode-label,
+#lessonModeStatus {
+  font-size:11px;
+  font-weight:800;
+  color:#553d75;
+}
+.lesson-mode-button {
+  min-height:32px;
+  padding:3px 9px;
+  border:2px solid #9877c4;
+  border-radius:10px;
+  background:#fff;
+  color:#553d75;
+  font-size:12px;
+  font-weight:900;
+}
+.lesson-mode-button.selected-mode {
+  background:#fff3a9;
+  border-color:#e0b94f;
+  color:#624d11;
+}
+.lesson-mode-button:disabled {
+  opacity:.45;
+}
+@media (orientation:landscape) and (min-width:850px) {
+  .lesson-mode-area { margin-bottom:2px; padding:2px 5px; }
+  .lesson-mode-button { min-height:27px; font-size:10px; padding:2px 7px; }
+  .lesson-mode-label, #lessonModeStatus { font-size:9px; }
+}
+
+
+.lesson-mode-area.mac-audio-mode {
+  background: #fff3a9;
+  border-color: #e0b94f;
+}
+
+.lesson-mode-area.mac-audio-mode #practiceModeButton {
+  background: #e9f8eb !important;
+  border-color: #65ad72 !important;
+  color: #356540 !important;
+}
