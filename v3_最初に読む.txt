@@ -1,0 +1,11 @@
+Google同期版 v3（キャッシュ解除版）
+
+・GAS URL設定済み
+・古いService Worker停止
+・古いキャッシュ削除
+・reset-cache.html追加
+
+公開後:
+1. https://hrfzhwhvhv-oss.github.io/chairo-ipad/reset-cache.html
+2. 「キャッシュを解除する」
+3. https://hrfzhwhvhv-oss.github.io/chairo-ipad/teacher-controller.html

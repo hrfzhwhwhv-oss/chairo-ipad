@@ -1046,28 +1046,10 @@ button { font-family: inherit; }
   color: #356540 !important;
 }
 
-
-/* ===== Google Apps Script iPad同期 ===== */
-.google-sync-bar {
-  margin: 0 12px 8px;
-  padding: 8px 14px;
-  border: 2px solid #9cc7dc;
-  border-radius: 14px;
-  background: #eef9ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-weight: 800;
-  color: #355b70;
+.google-sync-bar{
+  margin:0 12px 8px;padding:8px 14px;border:2px solid #9cc7dc;border-radius:14px;
+  background:#eef9ff;display:flex;align-items:center;justify-content:center;gap:10px;
+  font-weight:800;color:#355b70
 }
-.google-sync-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #aaa;
-}
-.google-sync-dot.connected {
-  background: #53b76a;
-  box-shadow: 0 0 0 4px rgba(83,183,106,.16);
-}
+.google-sync-dot{width:14px;height:14px;border-radius:50%;background:#aaa}
+.google-sync-dot.connected{background:#53b76a;box-shadow:0 0 0 4px rgba(83,183,106,.16)}

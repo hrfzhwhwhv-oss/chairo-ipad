@@ -30,7 +30,6 @@ prepareTeacherAudio.addEventListener("click", () => {
 allStart.addEventListener("click", async () => {
   const cfg = window.CHAIRO_GOOGLE_SYNC || {};
   const startAt = Date.now() + Number(cfg.START_DELAY_MS || 3500);
-
   setTimeout(() => clickAudio("#startButton"), Math.max(0, startAt - Date.now()));
 
   try {
@@ -52,9 +51,9 @@ allStop.addEventListener("click", async () => {
   catch (_) { teacherStatus.textContent = "送信できません"; }
 });
 
-speedChoices.forEach((button) => {
+speedChoices.forEach(button => {
   button.addEventListener("click", async () => {
-    speedChoices.forEach((b) => b.classList.remove("selected"));
+    speedChoices.forEach(b => b.classList.remove("selected"));
     button.classList.add("selected");
 
     const d = audioDoc();

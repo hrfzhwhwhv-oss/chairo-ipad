@@ -1,0 +1,4 @@
+Google Apps Script同期版 v2
+・sync.js / network-sync.js の読み込み残りを修正
+・iPad専用Google同期に整理
+・ローカルのindex.htmlではなく、GitHub Pages URLで確認してください

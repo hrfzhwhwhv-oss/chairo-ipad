@@ -3,8 +3,6 @@
   const params = new URLSearchParams(location.search);
   const role = params.get("role") || "student";
   const listeners = new Set();
-
-  let running = false;
   let lastVersion = -1;
   let callbackSeq = 0;
   let pollTimer = null;
@@ -15,13 +13,7 @@
 
   function emitStatus(extra = {}) {
     window.dispatchEvent(new CustomEvent("chairo-google-sync-status", {
-      detail: {
-        configured: configured(),
-        role,
-        running,
-        lastVersion,
-        ...extra
-      }
+      detail: { configured: configured(), role, ...extra }
     }));
   }
 
@@ -36,24 +28,23 @@
 
   function readStateJsonp() {
     if (!configured()) {
-      emitStatus({ error: "Apps Script URL未設定" });
+      emitStatus({ connected: false, error: "Apps Script URL未設定" });
       return;
     }
 
     const cbName = "__chairoSyncCb" + (++callbackSeq);
     const script = document.createElement("script");
-    let done = false;
+    let finished = false;
 
     const cleanup = () => {
-      if (done) return;
-      done = true;
-      try { delete window[cbName]; } catch (_) { window[cbName] = undefined; }
+      if (finished) return;
+      finished = true;
+      try { delete window[cbName]; } catch (_) {}
       script.remove();
     };
 
     window[cbName] = (payload) => {
       cleanup();
-      running = true;
       emitStatus({ connected: true });
 
       const state = payload && payload.state;
@@ -63,28 +54,22 @@
       if (version === lastVersion) return;
       lastVersion = version;
 
-      listeners.forEach((fn) => {
+      listeners.forEach(fn => {
         try { fn(state); } catch (_) {}
       });
     };
 
     script.onerror = () => {
       cleanup();
-      running = false;
-      emitStatus({ connected: false, error: "Google同期に接続できません" });
+      emitStatus({ connected: false, error: "同期に接続できません" });
     };
 
-    script.src = buildUrl({
-      action: "state",
-      callback: cbName
-    });
-
+    script.src = buildUrl({ action: "state", callback: cbName });
     document.head.appendChild(script);
 
     setTimeout(() => {
-      if (!done) {
+      if (!finished) {
         cleanup();
-        running = false;
         emitStatus({ connected: false, error: "同期応答なし" });
       }
     }, 5000);
@@ -101,8 +86,6 @@
       startAt: data.startAt
     });
 
-    // GitHub Pages -> Apps Script へのCORS制限を避けるため no-cors GET。
-    // 書き込み結果は次回ポーリングで確認する。
     await fetch(url, {
       method: "GET",
       mode: "no-cors",
@@ -113,10 +96,6 @@
 
   function startPolling() {
     if (role === "audio") return;
-    if (!configured()) {
-      emitStatus({ connected: false, error: "Apps Script URL未設定" });
-      return;
-    }
     if (pollTimer) return;
 
     const tick = () => {
@@ -126,16 +105,13 @@
     tick();
   }
 
-  function onState(fn) {
-    listeners.add(fn);
-    return () => listeners.delete(fn);
-  }
-
   window.ChairoGoogleSync = {
     get configured() { return configured(); },
-    get connected() { return running; },
     send,
-    onState,
+    onState(fn) {
+      listeners.add(fn);
+      return () => listeners.delete(fn);
+    },
     startPolling
   };
 

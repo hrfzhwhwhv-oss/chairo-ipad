@@ -1151,14 +1151,12 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/* ===== Google Apps Script：先生iPadからの同期 ===== */
 let googleLastAppliedVersion = -1;
 
 function makeStudentSilentForEnsemble() {
   try {
     if (typeof setLessonMode === "function") setLessonMode("ensemble");
   } catch (_) {}
-
   try {
     if (typeof accompanimentOn !== "undefined" && accompanimentOn) {
       const b = document.getElementById("accompanimentButton");
@@ -1178,7 +1176,7 @@ function applyGoogleTeacherState(state) {
   if (state.speed != null) {
     const requested = String(state.speed);
     const btn = Array.from(speedButtons || []).find(
-      (button) => String(button.dataset.speed) === requested
+      b => String(b.dataset.speed) === requested
     );
     if (btn) changeSpeed(requested, btn);
   }
@@ -1187,10 +1185,7 @@ function applyGoogleTeacherState(state) {
     case "start": {
       const target = Number(state.startAt || 0);
       const wait = Math.max(0, target - Date.now());
-      setTimeout(() => {
-        // 遅れて受け取った場合でも、未開始ならすぐ開始。
-        startSong();
-      }, wait);
+      setTimeout(() => startSong(), wait);
       break;
     }
     case "pause":
