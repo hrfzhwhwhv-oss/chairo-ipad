@@ -1,4 +1,4 @@
-const CACHE_NAME = "chairo-kobin-v13-visual-part-only";
+const CACHE_NAME = "chairo-google-sync-v1";
 
 const APP_ASSETS = [
   "./",
@@ -13,6 +13,8 @@ const APP_ASSETS = [
   "./teacher-controller.html",
   "./sync.js",
   "./network-sync.js"
+  "./google-sync-config.js",
+  "./google-sync.js",
 ];
 
 self.addEventListener("install", (event) => {

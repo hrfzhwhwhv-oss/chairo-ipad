@@ -1149,3 +1149,76 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+
+/* ===== Google Apps Script：先生iPadからの同期 ===== */
+let googleLastAppliedVersion = -1;
+
+function makeStudentSilentForEnsemble() {
+  try {
+    if (typeof setLessonMode === "function") setLessonMode("ensemble");
+  } catch (_) {}
+
+  try {
+    if (typeof accompanimentOn !== "undefined" && accompanimentOn) {
+      const b = document.getElementById("accompanimentButton");
+      if (b) b.click();
+    }
+  } catch (_) {}
+}
+
+function applyGoogleTeacherState(state) {
+  if (!state) return;
+  const version = Number(state.version || 0);
+  if (version <= googleLastAppliedVersion) return;
+  googleLastAppliedVersion = version;
+
+  makeStudentSilentForEnsemble();
+
+  if (state.speed != null) {
+    const requested = String(state.speed);
+    const btn = Array.from(speedButtons || []).find(
+      (button) => String(button.dataset.speed) === requested
+    );
+    if (btn) changeSpeed(requested, btn);
+  }
+
+  switch (state.command) {
+    case "start": {
+      const target = Number(state.startAt || 0);
+      const wait = Math.max(0, target - Date.now());
+      setTimeout(() => {
+        // 遅れて受け取った場合でも、未開始ならすぐ開始。
+        startSong();
+      }, wait);
+      break;
+    }
+    case "pause":
+      pauseSong();
+      break;
+    case "stop":
+      stopSong();
+      break;
+  }
+}
+
+if (window.ChairoGoogleSync) {
+  window.ChairoGoogleSync.onState(applyGoogleTeacherState);
+}
+
+window.addEventListener("chairo-google-sync-status", (event) => {
+  const s = event.detail || {};
+  const dot = document.getElementById("googleSyncDot");
+  const text = document.getElementById("googleSyncText");
+  if (!dot || !text) return;
+
+  if (s.connected) {
+    dot.classList.add("connected");
+    text.textContent = "先生iPadとの同期：接続中";
+  } else {
+    dot.classList.remove("connected");
+    text.textContent = s.configured === false
+      ? "同期設定がまだです"
+      : "先生iPadとの同期：接続待ち";
+  }
+});

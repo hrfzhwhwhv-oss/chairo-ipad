@@ -1,119 +1,83 @@
-
-const statusText = document.getElementById("statusText");
+const statusDot = document.getElementById("statusDot");
+const teacherStatus = document.getElementById("teacherStatus");
 const allStart = document.getElementById("allStart");
 const allPause = document.getElementById("allPause");
 const allStop = document.getElementById("allStop");
 const speedChoices = document.querySelectorAll(".speed-choice");
-const teacherAccompaniment = document.getElementById("teacherAccompaniment");
+const prepareTeacherAudio = document.getElementById("prepareTeacherAudio");
+const teacherAudioStatus = document.getElementById("teacherAudioStatus");
+const frame = document.getElementById("teacherAudioFrame");
 
-let accompanimentOn = true;
-
-async function send(command, data = {}, label = "") {
-  try {
-    if (window.ChairoNetwork) {
-      await window.ChairoNetwork.send(command, data);
-      statusText.textContent = label || `送信しました：${command}`;
-      return;
-    }
-
-    if (window.ChairoSync) {
-      window.ChairoSync.send(command, data);
-      statusText.textContent = (label || `送信しました：${command}`) + "（同じ端末内テスト）";
-      return;
-    }
-
-    statusText.textContent = "同期機能を準備中です";
-  } catch (error) {
-    statusText.textContent = "送信できません：" + (error?.message || error);
-  }
+function audioDoc() {
+  try { return frame.contentDocument || frame.contentWindow.document; }
+  catch (_) { return null; }
 }
 
-allStart.addEventListener("click", () => {
-  send("start", {}, "▶ みんなスタート を送信しました");
+function clickAudio(selector) {
+  const d = audioDoc();
+  const b = d && d.querySelector(selector);
+  if (!b) return false;
+  b.click();
+  return true;
+}
+
+prepareTeacherAudio.addEventListener("click", () => {
+  teacherAudioStatus.textContent = clickAudio("#soundCheckButton")
+    ? "✅ 音の準備OK"
+    : "音源を読み込み中です";
 });
 
-allPause.addEventListener("click", () => {
-  send("pause", {}, "⏸ いちじていし を送信しました");
+allStart.addEventListener("click", async () => {
+  const cfg = window.CHAIRO_GOOGLE_SYNC || {};
+  const startAt = Date.now() + Number(cfg.START_DELAY_MS || 3500);
+
+  setTimeout(() => clickAudio("#startButton"), Math.max(0, startAt - Date.now()));
+
+  try {
+    await window.ChairoGoogleSync.send("start", { startAt });
+  } catch (e) {
+    teacherStatus.textContent = "送信できません";
+  }
 });
 
-allStop.addEventListener("click", () => {
-  send("stop", {}, "⏹ ストップ を送信しました");
+allPause.addEventListener("click", async () => {
+  clickAudio("#pauseButton");
+  try { await window.ChairoGoogleSync.send("pause", {}); }
+  catch (_) { teacherStatus.textContent = "送信できません"; }
+});
+
+allStop.addEventListener("click", async () => {
+  clickAudio("#stopButton");
+  try { await window.ChairoGoogleSync.send("stop", { startAt: 0 }); }
+  catch (_) { teacherStatus.textContent = "送信できません"; }
 });
 
 speedChoices.forEach((button) => {
-  button.addEventListener("click", () => {
-    speedChoices.forEach((item) => item.classList.remove("selected"));
+  button.addEventListener("click", async () => {
+    speedChoices.forEach((b) => b.classList.remove("selected"));
     button.classList.add("selected");
-    send(
-      "speed",
-      { speed: Number(button.dataset.speed) },
-      `はやさを「${button.textContent.trim()}」にそろえました`
-    );
+
+    const d = audioDoc();
+    const audioSpeed = d && d.querySelector(`.speed-button[data-speed="${button.dataset.speed}"]`);
+    if (audioSpeed) audioSpeed.click();
+
+    try {
+      await window.ChairoGoogleSync.send("speed", { speed: Number(button.dataset.speed) });
+    } catch (_) {
+      teacherStatus.textContent = "送信できません";
+    }
   });
 });
 
-teacherAccompaniment.addEventListener("click", () => {
-  accompanimentOn = !accompanimentOn;
-  teacherAccompaniment.classList.toggle("selected", accompanimentOn);
-  teacherAccompaniment.textContent = accompanimentOn ? "🎹 伴奏 ON" : "🎹 伴奏 OFF";
-  send(
-    "accompaniment",
-    { on: accompanimentOn },
-    accompanimentOn ? "🎹 伴奏ON を送信しました" : "伴奏OFF を送信しました"
-  );
-});
-
-
-/* Mac親機との接続状態・接続台数 */
-const connectedCount = document.getElementById("connectedCount");
-
-async function refreshClientStatus() {
-  if (!window.ChairoNetwork) return;
-
-  try {
-    const status = await window.ChairoNetwork.getStatus();
-    if (connectedCount) connectedCount.textContent = String(status.count ?? 0);
-  } catch (_) {}
-}
-
-window.addEventListener("chairo-network-status", (event) => {
-  const state = event.detail || {};
-  const dot = document.getElementById("statusDot");
-
-  if (state.connected) {
-    dot.style.background = "#55b96b";
-    statusText.textContent = "Mac親機に接続できました";
+window.addEventListener("chairo-google-sync-status", (event) => {
+  const s = event.detail || {};
+  if (s.connected) {
+    statusDot.classList.add("connected");
+    teacherStatus.textContent = "Google同期：接続中";
   } else {
-    dot.style.background = "#e3a63b";
-    statusText.textContent = "Mac親機への再接続を待っています";
-  }
-});
-
-setInterval(refreshClientStatus, 2000);
-refreshClientStatus();
-
-
-const syncQuality = document.getElementById("syncQuality");
-
-window.addEventListener("chairo-network-status", (event) => {
-  const state = event.detail || {};
-
-  if (!syncQuality) return;
-
-  if (!state.connected) {
-    syncQuality.textContent = "同期時計：接続待ち";
-    return;
-  }
-
-  if (!state.clockReady) {
-    syncQuality.textContent = "同期時計：調整中…";
-    return;
-  }
-
-  const rtt = Number(state.bestRttMs);
-  if (Number.isFinite(rtt)) {
-    syncQuality.textContent = `同期時計：OK（通信 ${Math.round(rtt)}ms）`;
-  } else {
-    syncQuality.textContent = "同期時計：OK";
+    statusDot.classList.remove("connected");
+    teacherStatus.textContent = s.configured === false
+      ? "Apps Script URLを設定してください"
+      : "Google同期：接続待ち";
   }
 });

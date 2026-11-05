@@ -1,166 +1,87 @@
-<!DOCTYPE html>
-<html lang="ja">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ちゃいろのこびん 合奏教材</title>
-  <link rel="stylesheet" href="style.css">
-
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#fffaf0">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="ちゃいろのこびん">
-  <link rel="apple-touch-icon" href="icon-192.png">
-
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2487.5">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Apple Color Emoji'; -webkit-text-stroke: #000000}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Hiragino Mincho ProN'; -webkit-text-stroke: #000000}
+    p.p4 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px 'Hiragino Mincho ProN'; -webkit-text-stroke: #000000}
+    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.0px 'Hiragino Sans'; color: #000000; color: rgba(0, 0, 0, 0.85); -webkit-text-stroke: rgba(0, 0, 0, 0.85)}
+    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Hiragino Mincho ProN'; -webkit-text-stroke: #000000; min-height: 18.0px}
+    p.p7 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px 'Hiragino Mincho ProN'; -webkit-text-stroke: #000000; min-height: 18.0px}
+    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Hiragino Mincho ProN'; color: #000000; color: rgba(0, 0, 0, 0.85); -webkit-text-stroke: rgba(0, 0, 0, 0.85)}
+    p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.0px 'Helvetica Neue'; color: #000000; color: rgba(0, 0, 0, 0.85); -webkit-text-stroke: rgba(0, 0, 0, 0.85)}
+    span.s1 {font-kerning: none}
+    span.s2 {font: 11.0px '.Apple Color Emoji UI'; font-kerning: none; background-color: #b3b3b3}
+    span.s3 {font: 11.0px 'Helvetica Neue'; font-kerning: none; background-color: #b3b3b3}
+    span.s4 {font-kerning: none; background-color: #b3b3b3}
+    span.s5 {font: 12.0px 'Hiragino Mincho ProN'; font-kerning: none; color: #000000; -webkit-text-stroke: 0px #000000}
+    span.s6 {font: 11.0px '.Apple Color Emoji UI'; font-kerning: none; color: rgba(0, 0, 0, 0.85); background-color: #b3b3b3; -webkit-text-stroke: 0px rgba(0, 0, 0, 0.85)}
+    span.s7 {font: 11.0px 'Helvetica Neue'; font-kerning: none; color: rgba(0, 0, 0, 0.85); background-color: #b3b3b3; -webkit-text-stroke: 0px rgba(0, 0, 0, 0.85)}
+    span.s8 {font: 11.0px 'Hiragino Sans'; font-kerning: none; color: rgba(0, 0, 0, 0.85); background-color: #b3b3b3; -webkit-text-stroke: 0px rgba(0, 0, 0, 0.85)}
+    span.s9 {font: 12.0px 'Apple Color Emoji'; font-kerning: none}
+    span.s10 {font-kerning: none; color: #000000; -webkit-text-stroke: 0px #000000}
+    span.s11 {font: 11.0px 'Hiragino Sans'; font-kerning: none; background-color: #b3b3b3}
+    span.s12 {font: 11.0px 'STIX Two Math'; font-kerning: none; background-color: #b3b3b3}
+  </style>
 </head>
 <body>
-  <main class="app">
-    <header class="title-area">
-      <span class="bottle">🏺</span>
-      <h1>ちゃいろのこびん</h1>
-      <span class="bottle">🏺</span>
-    </header>
-
-    <section class="selection-area">
-      <div class="selection-group">
-        <p class="mode-title">がっきを えらぶ</p>
-        <div class="mode-buttons">
-          <button class="instrument-button selected-mode" data-instrument="xylophone">🪵 もっきん</button>
-          <button class="instrument-button" data-instrument="bells">🔔 ハンドベル</button>
-          <button class="instrument-button" data-instrument="bass">🎹 ベース</button>
-        </div>
-      </div>
-      <div class="selection-divider"></div>
-      <div class="selection-group">
-        <p id="partSelectionTitle" class="mode-title">パートを えらぶ（もっきん）</p>
-        <div id="xylophoneModeButtons" class="mode-buttons">
-          <button class="part-button selected-mode" data-mode="part1">① もっきん①</button>
-          <button class="part-button" data-mode="part2">② もっきん②</button>
-          <button class="part-button" data-mode="all">🎵 ぜんぶ</button>
-        </div>
-        <div id="bellModeButtons" class="mode-buttons hidden">
-          <button class="part-button" data-mode="part1">① ベル①</button>
-          <button class="part-button" data-mode="part2">② ベル②</button>
-          <button class="part-button" data-mode="part3">③ ベル③</button>
-          <button class="part-button" data-mode="all">🎵 ぜんぶ</button>
-        </div>
-        <div id="bassModeButtons" class="mode-buttons hidden">
-          <button class="part-button selected-mode" data-mode="bass">⑥ ベース</button>
-        </div>
-        <p id="modeMessage" class="mode-message"></p>
-      </div>
-    </section>
-
-    
-    <section class="sound-check-area">
-      <button id="soundCheckButton" class="sound-check-button" type="button">🔊 音チェック</button>
-      <span id="soundCheckStatus">最初に1回押してね</span>
-    </section>
-
-    
-    <section class="student-audio-notice">
-      <strong>🔇 生徒iPadは音量0で使います</strong>
-      <span>伴奏はMac 1台だけから鳴らします</span>
-    </section>
-
-    
-    <section class="lesson-mode-area">
-      <span class="lesson-mode-label">つかいかた</span>
-      <button id="practiceModeButton" class="lesson-mode-button selected-mode" type="button">🔊 れんしゅうモード</button>
-      <button id="ensembleModeButton" class="lesson-mode-button" type="button">🔇 がっそうモード</button>
-      <span id="lessonModeStatus">iPadから音が鳴ります</span>
-    </section>
-
-    <section class="main-panel">
-      <div class="controls">
-        <button id="startButton" class="start-button">▶ スタート</button>
-        <button id="pauseButton">⏸ いちじていし</button>
-        <button id="stopButton">⏹ ストップ</button>
-
-        <p class="control-title">はやさ</p>
-        <button class="speed-button" data-speed="1050">🐢 ゆっくり</button>
-        <button class="speed-button selected" data-speed="700">🚶 ふつう</button>
-        <button class="speed-button" data-speed="500">🏃 はやく</button>
-        <p class="control-title">せんせい伴奏</p>
-        <button id="accompanimentButton" class="accompaniment-button selected">🎹 伴奏 ON</button>
-        <p id="accompanimentStatus" class="accompaniment-status">スティックカウント＋前奏＋ピアノ伴奏（ベース強め）</p>
-      </div>
-
-      <div class="note-area">
-        <p id="actionMessage" class="small-message">ひかる おとを たたこう</p>
-        <div id="currentNote" class="current-note note-mi">み</div>
-      </div>
-
-      <div id="waitingArea" class="waiting-area">
-        <div class="face">😊</div>
-        <p id="waitingText">まってね</p>
-      </div>
-    </section>
-
-    <section class="melody-area">
-      <p class="section-title">おとの ならび</p>
-      <div id="melody" class="melody"></div>
-    </section>
-
-    
-    <section id="colorInstrumentArea" class="xylophone-area">
-      <p id="keyAreaTitle" class="section-title">もっきんを たたく ところ</p>
-
-      <div id="xylophoneKeys" class="single-key-row">
-        <div class="xylophone-key key-do" data-note="ど">ど</div>
-        <div class="xylophone-key key-re" data-note="れ">れ</div>
-        <div class="xylophone-key key-mi" data-note="み">み</div>
-        <div class="xylophone-key key-fa" data-note="ふぁ">ふぁ</div>
-        <div class="xylophone-key key-so" data-note="そ">そ</div>
-        <div class="xylophone-key key-la" data-note="ら">ら</div>
-        <div class="xylophone-key key-si" data-note="し">し</div>
-        <div class="xylophone-key key-do high-inline" data-note="ど↑">ど↑</div>
-        <div class="xylophone-key key-re high-inline" data-note="れ↑">れ↑</div>
-        <div class="xylophone-key key-mi high-inline" data-note="み↑">み↑</div>
-      </div>
-
-      <div id="bellKeys" class="single-key-row hidden">
-        <div class="xylophone-key key-mi bell-key" data-note="み">み</div>
-        <div class="xylophone-key key-fa bell-key" data-note="ふぁ">ふぁ</div>
-        <div class="xylophone-key key-so bell-key" data-note="そ">そ</div>
-        <div class="xylophone-key key-la bell-key" data-note="ら">ら</div>
-        <div class="xylophone-key key-si bell-key" data-note="し">し</div>
-        <div class="xylophone-key key-do bell-key" data-note="ど↑">ど↑</div>
-      </div>
-
-      <p id="bottomMessage" class="bottom-message">♪ ひかる ところの おとを たたこう！</p>
-    </section>
-
-    <section id="bassKeyboardArea" class="bass-area hidden">
-      <p class="section-title">ベースで ひく けんばん</p>
-      <div class="piano">
-        <div class="white-key" data-bass-note="ど">ど</div>
-        <div class="white-key" data-bass-note="れ">れ</div>
-        <div class="white-key" data-bass-note="み">み</div>
-        <div class="piano-key-group">
-          <div class="white-key" data-bass-note="ふぁ">ふぁ</div>
-          <div class="black-key" data-bass-note="ふぁ♯">ふぁ♯</div>
-        </div>
-        <div class="white-key" data-bass-note="そ">そ</div>
-      </div>
-      <p class="bottom-message">🎹 ひかる けんばんを ひこう！</p>
-    </section>
-  </main>
-
-  <script src="songs/chairo-data.js"></script>
-  <script src="sync.js"></script>
-  <script src="network-sync.js"></script>
-  <script src="script.js"></script>
-
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js")
-          .catch((error) => console.log("Service Worker registration failed:", error));
-      });
-    }
-  </script>
-
+<p class="p1"><span class="s1">🏺</span></p>
+<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'Hiragino Mincho ProN'; -webkit-text-stroke: #000000"><span class="s1"><b>ちゃいろのこびん</b></span></h1>
+<p class="p1"><span class="s1">🏺</span></p>
+<p class="p3"><span class="s1"><b>先生iPadとの同期：準備中</b></span></p>
+<p class="p4"><span class="s1">がっきを えらぶ</span></p>
+<p class="p5"><span class="s2">🪵</span><span class="s3"> </span><span class="s4">もっきん</span><span class="s5"> </span><span class="s2">🔔</span><span class="s3"> </span><span class="s4">ハンドベル</span><span class="s5"> </span><span class="s2">🎹</span><span class="s3"> </span><span class="s4">ベース</span></p>
+<p class="p6"><span class="s1"></span><br></p>
+<p class="p4"><span class="s1">パートを えらぶ（もっきん）</span></p>
+<p class="p5"><span class="s4">①</span><span class="s3"> </span><span class="s4">もっきん①</span><span class="s5"> </span><span class="s4">②</span><span class="s3"> </span><span class="s4">もっきん②</span><span class="s5"> </span><span class="s2">🎵</span><span class="s3"> </span><span class="s4">ぜんぶ</span></p>
+<p class="p5"><span class="s4">①</span><span class="s3"> </span><span class="s4">ベル①</span><span class="s5"> </span><span class="s4">②</span><span class="s3"> </span><span class="s4">ベル②</span><span class="s5"> </span><span class="s4">③</span><span class="s3"> </span><span class="s4">ベル③</span><span class="s5"> </span><span class="s2">🎵</span><span class="s3"> </span><span class="s4">ぜんぶ</span></p>
+<p class="p5"><span class="s4">⑥</span><span class="s3"> </span><span class="s4">ベース</span></p>
+<p class="p7"><span class="s1"></span><br></p>
+<p class="p3"><span class="s6">🔊</span><span class="s7"> </span><span class="s8">音チェック</span><span class="s1"> 最初に1回押してね</span></p>
+<p class="p3"><span class="s9">🔇</span><span class="s1"><b> 生徒iPadは音量0で使います</b> 伴奏はMac 1台だけから鳴らします</span></p>
+<p class="p8"><span class="s10">つかいかた </span><span class="s2">🔊</span><span class="s3"> </span><span class="s11">れんしゅうモード</span><span class="s10"> </span><span class="s2">🔇</span><span class="s3"> </span><span class="s11">がっそうモード</span><span class="s10"> iPadから音が鳴ります</span></p>
+<p class="p5"><span class="s3">▶ </span><span class="s4">スタート</span><span class="s5"> </span><span class="s12">⏸</span><span class="s3"> </span><span class="s4">いちじていし</span><span class="s5"> </span><span class="s12">⏹</span><span class="s3"> </span><span class="s4">ストップ</span></p>
+<p class="p4"><span class="s1">はやさ</span></p>
+<p class="p5"><span class="s2">🐢</span><span class="s3"> </span><span class="s4">ゆっくり</span><span class="s5"> </span><span class="s2">🚶</span><span class="s3"> </span><span class="s4">ふつう</span><span class="s5"> </span><span class="s2">🏃</span><span class="s3"> </span><span class="s4">はやく</span></p>
+<p class="p4"><span class="s1">せんせい伴奏</span></p>
+<p class="p9"><span class="s2">🎹</span><span class="s4"> </span><span class="s11">伴奏</span><span class="s4"> ON</span></p>
+<p class="p4"><span class="s1">スティックカウント＋前奏＋ピアノ伴奏（ベース強め）</span></p>
+<p class="p4"><span class="s1">ひかる おとを たたこう</span></p>
+<p class="p3"><span class="s1">み</span></p>
+<p class="p1"><span class="s1">😊</span></p>
+<p class="p4"><span class="s1">まってね</span></p>
+<p class="p4"><span class="s1">おとの ならび</span></p>
+<p class="p6"><span class="s1"></span><br></p>
+<p class="p4"><span class="s1">もっきんを たたく ところ</span></p>
+<p class="p3"><span class="s1">ど</span></p>
+<p class="p3"><span class="s1">れ</span></p>
+<p class="p3"><span class="s1">み</span></p>
+<p class="p3"><span class="s1">ふぁ</span></p>
+<p class="p3"><span class="s1">そ</span></p>
+<p class="p3"><span class="s1">ら</span></p>
+<p class="p3"><span class="s1">し</span></p>
+<p class="p3"><span class="s1">ど↑</span></p>
+<p class="p3"><span class="s1">れ↑</span></p>
+<p class="p3"><span class="s1">み↑</span></p>
+<p class="p3"><span class="s1">み</span></p>
+<p class="p3"><span class="s1">ふぁ</span></p>
+<p class="p3"><span class="s1">そ</span></p>
+<p class="p3"><span class="s1">ら</span></p>
+<p class="p3"><span class="s1">し</span></p>
+<p class="p3"><span class="s1">ど↑</span></p>
+<p class="p4"><span class="s1">♪ ひかる ところの おとを たたこう！</span></p>
+<p class="p4"><span class="s1">ベースで ひく けんばん</span></p>
+<p class="p3"><span class="s1">ど</span></p>
+<p class="p3"><span class="s1">れ</span></p>
+<p class="p3"><span class="s1">み</span></p>
+<p class="p3"><span class="s1">ふぁ</span></p>
+<p class="p3"><span class="s1">ふぁ♯</span></p>
+<p class="p3"><span class="s1">そ</span></p>
+<p class="p4"><span class="s9">🎹</span><span class="s1"> ひかる けんばんを ひこう！</span></p>
 </body>
 </html>
