@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ちゃいろのこびん 先生iPad</title>
+  <link rel="stylesheet" href="teacher-style.css">
+</head>
+<body>
+<main class="teacher-app">
+  <header class="teacher-header">
+    <h1>🏺 ちゃいろのこびん</h1>
+    <p>先生iPad コントローラー</p>
+  </header>
+
+  <section class="status-card">
+    <span id="statusDot" class="status-dot"></span>
+    <strong id="teacherStatus">Google同期：準備中</strong>
+  </section>
+
+  <section class="teacher-help">
+    <button id="prepareTeacherAudio" type="button">🔊 音を準備</button>
+    <span id="teacherAudioStatus">授業前に1回押してください</span>
+  </section>
+
+  <section class="transport-card">
+    <button id="allStart" class="big start" type="button">▶ みんな スタート</button>
+    <button id="allPause" class="big pause" type="button">⏸ いちじていし</button>
+    <button id="allStop" class="big stop" type="button">⏹ ストップ</button>
+  </section>
+
+  <section class="setting-card">
+    <h2>はやさ</h2>
+    <div class="choice-row">
+      <button class="speed-choice" data-speed="1050">🐢 ゆっくり</button>
+      <button class="speed-choice selected" data-speed="700">🚶 ふつう</button>
+      <button class="speed-choice" data-speed="500">🏃 はやく</button>
+    </div>
+  </section>
+
+  <section class="teacher-note">
+    生徒iPadは教材ページを開いて担当パートを選んだら、その後は触らなくてOKです。
+  </section>
+
+  <iframe id="teacherAudioFrame" class="audio-frame" src="./index.html?role=audio" title="先生用伴奏"></iframe>
+</main>
+<script src="google-sync-config.js"></script>
+<script src="google-sync.js"></script>
+<script src="teacher-controller.js"></script>
+</body>
+</html>

@@ -8,4 +8,4 @@ Google同期版 v3（キャッシュ解除版）
 公開後:
 1. https://hrfzhwhvhv-oss.github.io/chairo-ipad/reset-cache.html
 2. 「キャッシュを解除する」
-3. https://hrfzhwhvhv-oss.github.io/chairo-ipad/teacher-controller.html
+3. https://hrfzhwhvhv-oss.github.io/chairo-ipad/teacher.html
