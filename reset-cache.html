@@ -26,7 +26,7 @@ document.getElementById("reset").addEventListener("click", async () => {
       const keys = await caches.keys();
       await Promise.all(keys.map(k => caches.delete(k)));
     }
-    msg.textContent = "解除できました。先生画面を開き直してください。";
+    msg.textContent = "解除できました。教材ページを開き直してください。";
   } catch (e) {
     msg.textContent = "解除中にエラー: " + e;
   }
