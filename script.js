@@ -1217,3 +1217,57 @@ window.addEventListener("chairo-google-sync-status", (event) => {
       : "先生iPadとの同期：接続待ち";
   }
 });
+
+
+/* ===== v6: 先生iPad音声エンジンを直接アンロック ===== */
+window.chairoPrepareAudio = async function () {
+  try {
+    if (!audioContext || audioContext.state === "closed") {
+      audioContext = new AudioContext();
+    }
+    if (audioContext.state === "suspended") {
+      await audioContext.resume();
+    }
+
+    // ユーザー操作の瞬間に短い確認音を直接鳴らして、Safariの音声許可を確実に取得する。
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 523.25;
+    gain.gain.setValueAtTime(0.08, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.12);
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+    osc.start();
+    osc.stop(audioContext.currentTime + 0.12);
+
+    return { ok: true, state: audioContext.state };
+  } catch (error) {
+    return { ok: false, error: String(error) };
+  }
+};
+
+window.chairoTeacherStart = function () {
+  try {
+    if (audioContext && audioContext.state === "suspended") {
+      audioContext.resume().catch(() => {});
+    }
+  } catch (_) {}
+  startSong();
+};
+
+window.chairoTeacherPause = function () {
+  pauseSong();
+};
+
+window.chairoTeacherStop = function () {
+  stopSong();
+};
+
+window.chairoTeacherSetSpeed = function (value) {
+  const requested = String(value);
+  const button = Array.from(speedButtons || []).find(
+    b => String(b.dataset.speed) === requested
+  );
+  if (button) changeSpeed(requested, button);
+};

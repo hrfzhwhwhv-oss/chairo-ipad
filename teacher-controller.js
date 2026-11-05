@@ -13,6 +13,11 @@ function audioDoc() {
   catch (_) { return null; }
 }
 
+function audioWindow() {
+  try { return frame.contentWindow || null; }
+  catch (_) { return null; }
+}
+
 function clickAudio(selector) {
   const d = audioDoc();
   const b = d && d.querySelector(selector);
@@ -21,16 +26,28 @@ function clickAudio(selector) {
   return true;
 }
 
-prepareTeacherAudio.addEventListener("click", () => {
-  teacherAudioStatus.textContent = clickAudio("#soundCheckButton")
-    ? "✅ 音の準備OK"
-    : "音源を読み込み中です";
+prepareTeacherAudio.addEventListener("click", async () => {
+  const w = audioWindow();
+  if (!w || typeof w.chairoPrepareAudio !== "function") {
+    teacherAudioStatus.textContent = "音源を読み込み中です。もう一度押してください";
+    return;
+  }
+
+  teacherAudioStatus.textContent = "音を準備中…";
+  const result = await w.chairoPrepareAudio();
+  teacherAudioStatus.textContent = result && result.ok
+    ? "✅ 音の準備OK（確認音が鳴れば成功）"
+    : "⚠️ もう一度押してください";
 });
 
 allStart.addEventListener("click", async () => {
   const cfg = window.CHAIRO_GOOGLE_SYNC || {};
   const startAt = Date.now() + Number(cfg.START_DELAY_MS || 3500);
-  setTimeout(() => clickAudio("#startButton"), Math.max(0, startAt - Date.now()));
+  setTimeout(() => {
+    const w = audioWindow();
+    if (w && typeof w.chairoTeacherStart === "function") w.chairoTeacherStart();
+    else clickAudio("#startButton");
+  }, Math.max(0, startAt - Date.now()));
 
   try {
     await window.ChairoGoogleSync.send("start", { startAt });
@@ -40,13 +57,21 @@ allStart.addEventListener("click", async () => {
 });
 
 allPause.addEventListener("click", async () => {
-  clickAudio("#pauseButton");
+  {
+    const w = audioWindow();
+    if (w && typeof w.chairoTeacherPause === "function") w.chairoTeacherPause();
+    else clickAudio("#pauseButton");
+  }
   try { await window.ChairoGoogleSync.send("pause", {}); }
   catch (_) { teacherStatus.textContent = "送信できません"; }
 });
 
 allStop.addEventListener("click", async () => {
-  clickAudio("#stopButton");
+  {
+    const w = audioWindow();
+    if (w && typeof w.chairoTeacherStop === "function") w.chairoTeacherStop();
+    else clickAudio("#stopButton");
+  }
   try { await window.ChairoGoogleSync.send("stop", { startAt: 0 }); }
   catch (_) { teacherStatus.textContent = "送信できません"; }
 });
@@ -56,9 +81,14 @@ speedChoices.forEach(button => {
     speedChoices.forEach(b => b.classList.remove("selected"));
     button.classList.add("selected");
 
-    const d = audioDoc();
-    const audioSpeed = d && d.querySelector(`.speed-button[data-speed="${button.dataset.speed}"]`);
-    if (audioSpeed) audioSpeed.click();
+    const w = audioWindow();
+    if (w && typeof w.chairoTeacherSetSpeed === "function") {
+      w.chairoTeacherSetSpeed(button.dataset.speed);
+    } else {
+      const d = audioDoc();
+      const audioSpeed = d && d.querySelector(`.speed-button[data-speed="${button.dataset.speed}"]`);
+      if (audioSpeed) audioSpeed.click();
+    }
 
     try {
       await window.ChairoGoogleSync.send("speed", { speed: Number(button.dataset.speed) });
