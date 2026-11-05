@@ -1151,9 +1151,14 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 
+const chairoPageRole = new URLSearchParams(window.location.search).get("role") || "student";
+const isTeacherAudioRole = chairoPageRole === "audio";
+let googleStudentStartTimer = null;
+
 let googleLastAppliedVersion = -1;
 
 function makeStudentSilentForEnsemble() {
+  if (isTeacherAudioRole) return;
   try {
     if (typeof setLessonMode === "function") setLessonMode("ensemble");
   } catch (_) {}
@@ -1166,7 +1171,7 @@ function makeStudentSilentForEnsemble() {
 }
 
 function applyGoogleTeacherState(state) {
-  if (!state) return;
+  if (!state || isTeacherAudioRole) return;
   const version = Number(state.version || 0);
   if (version <= googleLastAppliedVersion) return;
   googleLastAppliedVersion = version;
@@ -1183,38 +1188,52 @@ function applyGoogleTeacherState(state) {
 
   switch (state.command) {
     case "start": {
-      const target = Number(state.startAt || 0);
+      if (googleStudentStartTimer) {
+        clearTimeout(googleStudentStartTimer);
+        googleStudentStartTimer = null;
+      }
 
-      // 先生iPadは startAt から
-      // 2小節カウント（8拍）＋4小節前奏（16拍）＝合計24拍
-      // を鳴らしてから本編に入る。
-      // 生徒iPadは無音なので、その24拍ぶん待ってから本編を始める。
-      const currentSpeed = Number(
-        (typeof speed !== "undefined" && speed) ? speed : (state.speed || 700)
-      );
-      const silentLeadInMs = 24 * currentSpeed;
-      const studentBodyStartAt = target + silentLeadInMs;
-      const wait = Math.max(0, studentBodyStartAt - Date.now());
+      // 先生側の実際の構成：2小節カウント(8拍) + 4小節前奏(16拍)
+      // 生徒側は無音でその24拍を待ち、本編の scheduleNext() を直接開始する。
+      const target = Number(state.startAt || 0);
+      const currentSpeed = Number(speed || state.speed || 700);
+      const bodyStartAt = target + (24 * currentSpeed);
+      const wait = Math.max(0, bodyStartAt - Date.now());
+
+      // 必ず曲頭から始める
+      stopSong();
+      currentIndex = 0;
+      waitingArea.classList.remove("playing");
+      waitingText.textContent = "まってね（前奏）";
 
       const syncText = document.getElementById("googleSyncText");
       if (syncText) syncText.textContent = "前奏を待っています…";
 
-      setTimeout(() => {
+      googleStudentStartTimer = setTimeout(() => {
+        googleStudentStartTimer = null;
         if (syncText) syncText.textContent = "先生iPadとの同期：接続中";
-        startSong();
+        scheduleNext();
       }, wait);
       break;
     }
     case "pause":
+      if (googleStudentStartTimer) {
+        clearTimeout(googleStudentStartTimer);
+        googleStudentStartTimer = null;
+      }
       pauseSong();
       break;
     case "stop":
+      if (googleStudentStartTimer) {
+        clearTimeout(googleStudentStartTimer);
+        googleStudentStartTimer = null;
+      }
       stopSong();
       break;
   }
 }
 
-if (window.ChairoGoogleSync) {
+if (window.ChairoGoogleSync && !isTeacherAudioRole) {
   window.ChairoGoogleSync.onState(applyGoogleTeacherState);
 }
 
