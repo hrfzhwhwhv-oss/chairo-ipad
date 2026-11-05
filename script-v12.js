@@ -1219,9 +1219,7 @@ function applyGoogleTeacherState(state) {
         googleStudentStartTimer = null;
       }
 
-      // v11:
-      // 先生側から送られてくる startAt は「本編開始時刻」そのもの。
-      // 生徒側は余計な計算をせず、その時刻まで待ってから本編を開始する。
+      // v12: startAt は先生から送られた「本編開始時刻」そのもの。
       const bodyStartAt = Number(state.startAt || 0);
       const wait = Math.max(0, bodyStartAt - Date.now());
 

@@ -43,24 +43,25 @@ prepareTeacherAudio.addEventListener("click", async () => {
 allStart.addEventListener("click", async () => {
   const cfg = window.CHAIRO_GOOGLE_SYNC || {};
 
-  // 選択中の速さを取得
+  // 選択中の速さを古いSafariでも動く書き方で取得
   const selectedSpeedButton = document.querySelector(".speed-choice.selected");
-  const currentSpeed = Number(selectedSpeedButton?.dataset?.speed || 700);
+  let currentSpeed = 700;
+  if (selectedSpeedButton && selectedSpeedButton.dataset && selectedSpeedButton.dataset.speed) {
+    currentSpeed = Number(selectedSpeedButton.dataset.speed);
+  }
 
-  // 先生の伴奏は3.5秒後に「カウント開始」。
+  // 先生はまずカウント開始
   const countInStartAt = Date.now() + Number(cfg.START_DELAY_MS || 3500);
 
-  // 2小節カウント(8拍) + 4小節前奏(16拍) = 24拍後が本編開始時刻。
+  // 2小節カウント(8拍) + 4小節前奏(16拍) = 24拍後が本編開始
   const bodyStartAt = countInStartAt + (24 * currentSpeed);
 
-  // 先生iPadは countInStartAt からカウント→前奏→本編を再生
   setTimeout(() => {
     const w = audioWindow();
     if (w && typeof w.chairoTeacherStart === "function") w.chairoTeacherStart();
     else clickAudio("#startButton");
   }, Math.max(0, countInStartAt - Date.now()));
 
-  // 生徒には「本編開始時刻」をそのまま送る
   try {
     await window.ChairoGoogleSync.send("start", { startAt: bodyStartAt });
   } catch (e) {
