@@ -1,0 +1,17 @@
+Google同期版 v5 修正版
+
+・生徒画面のJavaScript読み込みを修復
+・GAS URL設定済み
+・先生用 teacher.html 追加
+・Service Worker登録を停止
+・reset-cache.html で古いキャッシュを削除
+
+公開後:
+1. https://hrfzhwhvhv-oss.github.io/chairo-ipad/reset-cache.html
+2. 「キャッシュを解除する」
+3. 生徒用:
+   https://hrfzhwhvhv-oss.github.io/chairo-ipad/
+4. 先生用:
+   https://hrfzhwhvhv-oss.github.io/chairo-ipad/teacher.html
+
+生徒画面の上部が「先生iPadとの同期：接続中」になれば成功です。

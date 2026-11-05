@@ -304,10 +304,8 @@ function scheduleNext() {
   timer = setTimeout(scheduleNext, speed * (event.duration || 1));
 }
 
-let silentStudentLeadInTimer = null;
-
 function startSong() {
-  if (timer || countInRunning || introRunning || silentStudentLeadInTimer) return;
+  if (timer || countInRunning || introRunning) return;
   if (currentIndex >= currentSong.length) currentIndex = 0;
 
   if (accompanimentOn && currentIndex === 0) {
@@ -316,33 +314,13 @@ function startSong() {
         scheduleNext();
       });
     });
-    return;
+  } else {
+    scheduleNext();
   }
-
-  // 生徒用（伴奏OFF）でも曲頭では前奏分待ってから本編へ。
-  // 2小節カウント(8拍) + 4小節前奏(16拍) = 24拍
-  if (!accompanimentOn && currentIndex === 0 && !isTeacherAudioRole) {
-    waitingArea.classList.remove("playing");
-    waitingText.textContent = "まってね（前奏）";
-    currentNoteElement.textContent = "やすみ";
-    currentNoteElement.className = "current-note rest-note";
-
-    silentStudentLeadInTimer = setTimeout(() => {
-      silentStudentLeadInTimer = null;
-      scheduleNext();
-    }, 24 * Number(speed || 700));
-    return;
-  }
-
-  scheduleNext();
 }
 
 function pauseSong() {
   clearAccompanimentTimers();
-  if (silentStudentLeadInTimer) {
-    clearTimeout(silentStudentLeadInTimer);
-    silentStudentLeadInTimer = null;
-  }
   if (!timer) return;
   clearTimeout(timer);
   timer = null;
@@ -352,10 +330,6 @@ function pauseSong() {
 
 function stopSong() {
   clearAccompanimentTimers();
-  if (silentStudentLeadInTimer) {
-    clearTimeout(silentStudentLeadInTimer);
-    silentStudentLeadInTimer = null;
-  }
   if (timer) clearTimeout(timer);
 
   timer = null;
@@ -1177,14 +1151,9 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 
-const chairoPageRole = new URLSearchParams(window.location.search).get("role") || "student";
-const isTeacherAudioRole = chairoPageRole === "audio";
-let googleStudentStartTimer = null;
-
 let googleLastAppliedVersion = -1;
 
 function makeStudentSilentForEnsemble() {
-  if (isTeacherAudioRole) return;
   try {
     if (typeof setLessonMode === "function") setLessonMode("ensemble");
   } catch (_) {}
@@ -1197,7 +1166,7 @@ function makeStudentSilentForEnsemble() {
 }
 
 function applyGoogleTeacherState(state) {
-  if (!state || isTeacherAudioRole) return;
+  if (!state) return;
   const version = Number(state.version || 0);
   if (version <= googleLastAppliedVersion) return;
   googleLastAppliedVersion = version;
@@ -1214,52 +1183,21 @@ function applyGoogleTeacherState(state) {
 
   switch (state.command) {
     case "start": {
-      if (googleStudentStartTimer) {
-        clearTimeout(googleStudentStartTimer);
-        googleStudentStartTimer = null;
-      }
-
-      // 先生側の実際の構成：2小節カウント(8拍) + 4小節前奏(16拍)
-      // 生徒側は無音でその24拍を待ち、本編の scheduleNext() を直接開始する。
       const target = Number(state.startAt || 0);
-      const currentSpeed = Number(speed || state.speed || 700);
-      const bodyStartAt = target + (24 * currentSpeed);
-      const wait = Math.max(0, bodyStartAt - Date.now());
-
-      // 必ず曲頭から始める
-      stopSong();
-      currentIndex = 0;
-      waitingArea.classList.remove("playing");
-      waitingText.textContent = "まってね（前奏）";
-
-      const syncText = document.getElementById("googleSyncText");
-      if (syncText) syncText.textContent = "前奏を待っています…";
-
-      googleStudentStartTimer = setTimeout(() => {
-        googleStudentStartTimer = null;
-        if (syncText) syncText.textContent = "先生iPadとの同期：接続中";
-        scheduleNext();
-      }, wait);
+      const wait = Math.max(0, target - Date.now());
+      setTimeout(() => startSong(), wait);
       break;
     }
     case "pause":
-      if (googleStudentStartTimer) {
-        clearTimeout(googleStudentStartTimer);
-        googleStudentStartTimer = null;
-      }
       pauseSong();
       break;
     case "stop":
-      if (googleStudentStartTimer) {
-        clearTimeout(googleStudentStartTimer);
-        googleStudentStartTimer = null;
-      }
       stopSong();
       break;
   }
 }
 
-if (window.ChairoGoogleSync && !isTeacherAudioRole) {
+if (window.ChairoGoogleSync) {
   window.ChairoGoogleSync.onState(applyGoogleTeacherState);
 }
 
