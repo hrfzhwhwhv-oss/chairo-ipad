@@ -1184,8 +1184,25 @@ function applyGoogleTeacherState(state) {
   switch (state.command) {
     case "start": {
       const target = Number(state.startAt || 0);
-      const wait = Math.max(0, target - Date.now());
-      setTimeout(() => startSong(), wait);
+
+      // 先生iPadは startAt から
+      // 2小節カウント（8拍）＋4小節前奏（16拍）＝合計24拍
+      // を鳴らしてから本編に入る。
+      // 生徒iPadは無音なので、その24拍ぶん待ってから本編を始める。
+      const currentSpeed = Number(
+        (typeof speed !== "undefined" && speed) ? speed : (state.speed || 700)
+      );
+      const silentLeadInMs = 24 * currentSpeed;
+      const studentBodyStartAt = target + silentLeadInMs;
+      const wait = Math.max(0, studentBodyStartAt - Date.now());
+
+      const syncText = document.getElementById("googleSyncText");
+      if (syncText) syncText.textContent = "前奏を待っています…";
+
+      setTimeout(() => {
+        if (syncText) syncText.textContent = "先生iPadとの同期：接続中";
+        startSong();
+      }, wait);
       break;
     }
     case "pause":
