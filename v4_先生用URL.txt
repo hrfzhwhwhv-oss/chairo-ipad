@@ -1,9 +1,0 @@
-先生用URLを短くしました。
-
-先生iPad:
-https://hrfzhwhvhv-oss.github.io/chairo-ipad/teacher.html
-
-生徒iPad:
-https://hrfzhwhvhv-oss.github.io/chairo-ipad/
-
-teacher-controller.html は残しています。

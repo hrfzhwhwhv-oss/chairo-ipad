@@ -304,8 +304,10 @@ function scheduleNext() {
   timer = setTimeout(scheduleNext, speed * (event.duration || 1));
 }
 
+let silentStudentLeadInTimer = null;
+
 function startSong() {
-  if (timer || countInRunning || introRunning) return;
+  if (timer || countInRunning || introRunning || silentStudentLeadInTimer) return;
   if (currentIndex >= currentSong.length) currentIndex = 0;
 
   if (accompanimentOn && currentIndex === 0) {
@@ -314,13 +316,33 @@ function startSong() {
         scheduleNext();
       });
     });
-  } else {
-    scheduleNext();
+    return;
   }
+
+  // 生徒用（伴奏OFF）でも曲頭では前奏分待ってから本編へ。
+  // 2小節カウント(8拍) + 4小節前奏(16拍) = 24拍
+  if (!accompanimentOn && currentIndex === 0 && !isTeacherAudioRole) {
+    waitingArea.classList.remove("playing");
+    waitingText.textContent = "まってね（前奏）";
+    currentNoteElement.textContent = "やすみ";
+    currentNoteElement.className = "current-note rest-note";
+
+    silentStudentLeadInTimer = setTimeout(() => {
+      silentStudentLeadInTimer = null;
+      scheduleNext();
+    }, 24 * Number(speed || 700));
+    return;
+  }
+
+  scheduleNext();
 }
 
 function pauseSong() {
   clearAccompanimentTimers();
+  if (silentStudentLeadInTimer) {
+    clearTimeout(silentStudentLeadInTimer);
+    silentStudentLeadInTimer = null;
+  }
   if (!timer) return;
   clearTimeout(timer);
   timer = null;
@@ -330,6 +352,10 @@ function pauseSong() {
 
 function stopSong() {
   clearAccompanimentTimers();
+  if (silentStudentLeadInTimer) {
+    clearTimeout(silentStudentLeadInTimer);
+    silentStudentLeadInTimer = null;
+  }
   if (timer) clearTimeout(timer);
 
   timer = null;
