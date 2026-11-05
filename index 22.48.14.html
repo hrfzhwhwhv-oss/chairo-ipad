@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ちゃいろのこびん 合奏教材</title>
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#fffaf0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ちゃいろのこびん">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+</head>
+<body>
+  <main class="app">
+    <header class="title-area">
+      <span class="bottle">🏺</span>
+      <h1>ちゃいろのこびん</h1>
+      <span class="bottle">🏺</span>
+    </header>
+
+    <section class="google-sync-bar" id="googleSyncBar">
+      <span id="googleSyncDot" class="google-sync-dot"></span>
+      <strong id="googleSyncText">先生iPadとの同期：準備中</strong>
+    </section>
+
+
+    <section class="selection-area">
+      <div class="selection-group">
+        <p class="mode-title">がっきを えらぶ</p>
+        <div class="mode-buttons">
+          <button class="instrument-button selected-mode" data-instrument="xylophone">🪵 もっきん</button>
+          <button class="instrument-button" data-instrument="bells">🔔 ハンドベル</button>
+          <button class="instrument-button" data-instrument="bass">🎹 ベース</button>
+        </div>
+      </div>
+      <div class="selection-divider"></div>
+      <div class="selection-group">
+        <p id="partSelectionTitle" class="mode-title">パートを えらぶ（もっきん）</p>
+        <div id="xylophoneModeButtons" class="mode-buttons">
+          <button class="part-button selected-mode" data-mode="part1">① もっきん①</button>
+          <button class="part-button" data-mode="part2">② もっきん②</button>
+          <button class="part-button" data-mode="all">🎵 ぜんぶ</button>
+        </div>
+        <div id="bellModeButtons" class="mode-buttons hidden">
+          <button class="part-button" data-mode="part1">① ベル①</button>
+          <button class="part-button" data-mode="part2">② ベル②</button>
+          <button class="part-button" data-mode="part3">③ ベル③</button>
+          <button class="part-button" data-mode="all">🎵 ぜんぶ</button>
+        </div>
+        <div id="bassModeButtons" class="mode-buttons hidden">
+          <button class="part-button selected-mode" data-mode="bass">⑥ ベース</button>
+        </div>
+        <p id="modeMessage" class="mode-message"></p>
+      </div>
+    </section>
+
+    
+    <section class="sound-check-area">
+      <button id="soundCheckButton" class="sound-check-button" type="button">🔊 音チェック</button>
+      <span id="soundCheckStatus">最初に1回押してね</span>
+    </section>
+
+    
+    <section class="student-audio-notice">
+      <strong>🔇 生徒iPadは音量0で使います</strong>
+      <span>伴奏は先生iPad 1台だけから鳴らします</span>
+    </section>
+
+    
+    <section class="lesson-mode-area">
+      <span class="lesson-mode-label">つかいかた</span>
+      <button id="practiceModeButton" class="lesson-mode-button selected-mode" type="button">🔊 れんしゅうモード</button>
+      <button id="ensembleModeButton" class="lesson-mode-button" type="button">🔇 がっそうモード</button>
+      <span id="lessonModeStatus">iPadから音が鳴ります</span>
+    </section>
+
+    <section class="main-panel">
+      <div class="controls">
+        <button id="startButton" class="start-button">▶ スタート</button>
+        <button id="pauseButton">⏸ いちじていし</button>
+        <button id="stopButton">⏹ ストップ</button>
+
+        <p class="control-title">はやさ</p>
+        <button class="speed-button" data-speed="1050">🐢 ゆっくり</button>
+        <button class="speed-button selected" data-speed="700">🚶 ふつう</button>
+        <button class="speed-button" data-speed="500">🏃 はやく</button>
+        <p class="control-title">せんせい伴奏</p>
+        <button id="accompanimentButton" class="accompaniment-button selected">🎹 伴奏 ON</button>
+        <p id="accompanimentStatus" class="accompaniment-status">スティックカウント＋前奏＋ピアノ伴奏（ベース強め）</p>
+      </div>
+
+      <div class="note-area">
+        <p id="actionMessage" class="small-message">ひかる おとを たたこう</p>
+        <div id="currentNote" class="current-note note-mi">み</div>
+      </div>
+
+      <div id="waitingArea" class="waiting-area">
+        <div class="face">😊</div>
+        <p id="waitingText">まってね</p>
+      </div>
+    </section>
+
+    <section class="melody-area">
+      <p class="section-title">おとの ならび</p>
+      <div id="melody" class="melody"></div>
+    </section>
+
+    
+    <section id="colorInstrumentArea" class="xylophone-area">
+      <p id="keyAreaTitle" class="section-title">もっきんを たたく ところ</p>
+
+      <div id="xylophoneKeys" class="single-key-row">
+        <div class="xylophone-key key-do" data-note="ど">ど</div>
+        <div class="xylophone-key key-re" data-note="れ">れ</div>
+        <div class="xylophone-key key-mi" data-note="み">み</div>
+        <div class="xylophone-key key-fa" data-note="ふぁ">ふぁ</div>
+        <div class="xylophone-key key-so" data-note="そ">そ</div>
+        <div class="xylophone-key key-la" data-note="ら">ら</div>
+        <div class="xylophone-key key-si" data-note="し">し</div>
+        <div class="xylophone-key key-do high-inline" data-note="ど↑">ど↑</div>
+        <div class="xylophone-key key-re high-inline" data-note="れ↑">れ↑</div>
+        <div class="xylophone-key key-mi high-inline" data-note="み↑">み↑</div>
+      </div>
+
+      <div id="bellKeys" class="single-key-row hidden">
+        <div class="xylophone-key key-mi bell-key" data-note="み">み</div>
+        <div class="xylophone-key key-fa bell-key" data-note="ふぁ">ふぁ</div>
+        <div class="xylophone-key key-so bell-key" data-note="そ">そ</div>
+        <div class="xylophone-key key-la bell-key" data-note="ら">ら</div>
+        <div class="xylophone-key key-si bell-key" data-note="し">し</div>
+        <div class="xylophone-key key-do bell-key" data-note="ど↑">ど↑</div>
+      </div>
+
+      <p id="bottomMessage" class="bottom-message">♪ ひかる ところの おとを たたこう！</p>
+    </section>
+
+    <section id="bassKeyboardArea" class="bass-area hidden">
+      <p class="section-title">ベースで ひく けんばん</p>
+      <div class="piano">
+        <div class="white-key" data-bass-note="ど">ど</div>
+        <div class="white-key" data-bass-note="れ">れ</div>
+        <div class="white-key" data-bass-note="み">み</div>
+        <div class="piano-key-group">
+          <div class="white-key" data-bass-note="ふぁ">ふぁ</div>
+          <div class="black-key" data-bass-note="ふぁ♯">ふぁ♯</div>
+        </div>
+        <div class="white-key" data-bass-note="そ">そ</div>
+      </div>
+      <p class="bottom-message">🎹 ひかる けんばんを ひこう！</p>
+    </section>
+  </main>
+
+  <script src="google-sync-config.js?v=9"></script>
+  <script src="google-sync.js?v=9"></script>
+  <script src="songs/chairo-data.js?v=8"></script>
+<script src="script.js?v=9"></script>
+
+
+</body>
+</html>

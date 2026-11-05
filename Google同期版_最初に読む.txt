@@ -1,0 +1,37 @@
+ちゃいろのこびん iPadだけ・Google Apps Script同期版
+
+■ 目的
+先生iPadだけで操作します。
+生徒iPadは最初に教材を開いて担当パートを選んだら、その後は触りません。
+
+■ 先生iPad
+https://あなたのGitHub Pages/teacher-controller.html
+
+■ 生徒iPad
+https://あなたのGitHub Pages/
+
+■ 最初に1回だけ必要な設定
+1. script.google.com を開く
+2. 「新しいプロジェクト」
+3. google-apps-script/Code.gs の内容を全部貼る
+4. 保存
+5. 「デプロイ」→「新しいデプロイ」→「ウェブアプリ」
+6. 発行された /exec URL をコピー
+7. google-sync-config.js の WEB_APP_URL に貼る
+8. GitHubへCommit → Push
+
+■ 授業での使い方
+1. 生徒iPadで教材URLを開く
+2. 各iPadで担当パートを選ぶ
+3. 先生iPadで teacher-controller.html を開く
+4. 「音を準備」を1回押す
+5. 先生の「みんな スタート」で全員開始
+
+■ 特徴
+・Supabase不要
+・QR不要
+・Mac不要
+・生徒の操作は授業開始前のパート選択だけ
+・先生操作はGoogle Apps Script経由で伝わる
+・生徒側は約1.2秒ごとに先生の指示を確認
+・スタート命令は約3.5秒後の開始時刻を送るため、確認間隔があっても揃えやすい
