@@ -248,7 +248,7 @@ function showCurrentEvent() {
     currentNoteElement.textContent = "やすみ";
     currentNoteElement.classList.add("rest-note");
     waitingArea.classList.remove("playing");
-    waitingText.textContent = "まってね";
+    waitingText.textContent = event.leadIn ? "カウント・前奏（まってね）" : "まってね";
     return;
   }
 
@@ -311,10 +311,17 @@ function startSong() {
   if (accompanimentOn && currentIndex === 0) {
     runCountIn(() => {
       runIntro(() => {
+        // 練習モードでは先生用のカウント・前奏をすでに再生しているので、
+        // 曲データ先頭の合奏用24拍休みは飛ばす。
+        while (currentIndex < currentSong.length && currentSong[currentIndex].leadIn) {
+          currentIndex += 1;
+        }
         scheduleNext();
       });
     });
   } else {
+    // 合奏モード（伴奏OFF）では leadIn 24拍をそのまま進み、
+    // 先生の2小節カウント＋4小節前奏が終わってから本編に入る。
     scheduleNext();
   }
 }

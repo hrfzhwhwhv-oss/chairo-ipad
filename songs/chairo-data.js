@@ -24,7 +24,24 @@
     "み↑": { className: "note-mi", frequency: 659.25 }
   };
 
+  // 合奏用：先生の2小節カウント＋4小節前奏に合わせる24拍の休み
+  function makeLeadIn(part) {
+    const result = [];
+    for (let i = 0; i < 24; i += 1) {
+      result.push({
+        bar: -5 + Math.floor(i / 4),
+        part,
+        note: "やすみ",
+        section: "カウント・前奏",
+        duration: 1,
+        leadIn: true
+      });
+    }
+    return result;
+  }
+
   const xylophone = [
+    ...makeLeadIn("木琴①"),
     ...makeBar(1, "木琴①", ["み","そ","そ","やすみ"], "前半"),
     ...makeBar(2, "木琴①", ["ふぁ","ら","ら","やすみ"], "前半"),
     ...makeBar(3, "木琴②", ["し","し","ら","し"], "前半"),
@@ -43,7 +60,9 @@
     ...makeBar(16, "木琴②", ["ど↑","ど↑","ど↑","やすみ"], "後半")
   ];
 
-  const bell = [];
+  const bell = [
+    ...makeLeadIn("ベル①")
+  ];
   for (let repeat = 0; repeat < 4; repeat += 1) {
     const startBar = repeat * 4 + 1;
     const section = repeat < 2 ? "前半" : "後半";
@@ -55,7 +74,9 @@
     );
   }
 
-  const bass = [];
+  const bass = [
+    ...makeLeadIn("ベース⑥")
+  ];
   for (let repeat = 0; repeat < 4; repeat += 1) {
     const startBar = repeat * 4 + 1;
     const section = repeat < 2 ? "前半" : "後半";
