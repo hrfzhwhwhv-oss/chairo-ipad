@@ -1227,10 +1227,18 @@ function makeStudentSilentForEnsemble() {
 
 function applyGoogleTeacherState(state) {
   if (!state) return;
+
+  // 個人練習中は先生iPadのGoogle同期命令を受けない。
+  // これによりGitHub Pages上でも練習モードが勝手に合奏モードへ戻らない。
+  if (typeof lessonMode !== "undefined" && lessonMode === "practice") {
+    return;
+  }
+
   const version = Number(state.version || 0);
   if (version <= googleLastAppliedVersion) return;
   googleLastAppliedVersion = version;
 
+  // 合奏モードのときだけ先生同期に従う。
   makeStudentSilentForEnsemble();
 
   if (state.speed != null) {
