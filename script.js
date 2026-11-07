@@ -37,6 +37,12 @@ let timer = null;
 let speed = Number(songData.defaultSpeedMs || 700);
 let audioContext = null;
 
+// 生徒用の絶対時刻タイムライン。
+// 「前のsetTimeoutが終わってから次へ」ではなく、曲開始時刻を基準に毎回補正する。
+let absoluteTimelineStart = null;
+let absoluteTimelineElapsed = 0;
+let playbackSpeed = speed;
+
 let lessonMode = "practice";
 const pageRole = new URLSearchParams(window.location.search).get("role") || "student";
 const isMacAudioSource = pageRole === "audio";
@@ -298,15 +304,36 @@ function scheduleNext() {
     return;
   }
 
+  // タイムライン未設定なら、今を基準時刻にする。
+  if (absoluteTimelineStart === null) {
+    absoluteTimelineStart = Date.now();
+    absoluteTimelineElapsed = 0;
+    playbackSpeed = Number(speed || 700);
+  }
+
   const event = currentSong[currentIndex];
   showCurrentEvent();
+
+  absoluteTimelineElapsed += playbackSpeed * (event.duration || 1);
   currentIndex += 1;
-  timer = setTimeout(scheduleNext, speed * (event.duration || 1));
+
+  // 次の音は「前の処理終了から◯ms後」ではなく、
+  // 曲開始時刻 + 累積時間 の絶対時刻に合わせる。
+  const nextTarget = absoluteTimelineStart + absoluteTimelineElapsed;
+  const wait = Math.max(0, nextTarget - Date.now());
+
+  timer = setTimeout(scheduleNext, wait);
 }
 
 function startSong() {
   if (timer || countInRunning || introRunning) return;
   if (currentIndex >= currentSong.length) currentIndex = 0;
+
+  if (absoluteTimelineStart === null) {
+    absoluteTimelineStart = Date.now();
+    absoluteTimelineElapsed = 0;
+    playbackSpeed = Number(speed || 700);
+  }
 
   if (accompanimentOn && currentIndex === 0) {
     runCountIn(() => {
@@ -331,6 +358,8 @@ function pauseSong() {
   if (!timer) return;
   clearTimeout(timer);
   timer = null;
+  absoluteTimelineStart = null;
+  absoluteTimelineElapsed = 0;
   waitingArea.classList.remove("playing");
   waitingText.textContent = "いちじていし";
 }
@@ -341,6 +370,8 @@ function stopSong() {
 
   timer = null;
   currentIndex = 0;
+  absoluteTimelineStart = null;
+  absoluteTimelineElapsed = 0;
   clearHighlights();
 
   currentNoteElement.textContent = selectedInstrument === "bass" ? "ど" : "み";
@@ -354,6 +385,8 @@ function finishSong() {
   if (timer) clearTimeout(timer);
 
   timer = null;
+  absoluteTimelineStart = null;
+  absoluteTimelineElapsed = 0;
   clearHighlights();
   currentNoteElement.textContent = "おしまい";
   currentNoteElement.classList.add("rest-note");
@@ -1191,7 +1224,13 @@ function applyGoogleTeacherState(state) {
   switch (state.command) {
     case "start": {
       const target = Number(state.startAt || 0);
-      const wait = Math.max(0, target - Date.now());
+
+      // 先生から送られた開始時刻を、曲全体の絶対基準時刻にする。
+      absoluteTimelineStart = target > 0 ? target : Date.now();
+      absoluteTimelineElapsed = 0;
+      playbackSpeed = Number(state.speed || speed || 700);
+
+      const wait = Math.max(0, absoluteTimelineStart - Date.now());
       setTimeout(() => startSong(), wait);
       break;
     }
