@@ -319,7 +319,19 @@ function scheduleNext() {
 
   // 次の音は「前の処理終了から◯ms後」ではなく、
   // 曲開始時刻 + 累積時間 の絶対時刻に合わせる。
-  const nextTarget = absoluteTimelineStart + absoluteTimelineElapsed;
+  let nextTarget = absoluteTimelineStart + absoluteTimelineElapsed;
+
+  // 木琴①の後半だけ、表示がわずかに遅く見えるため50msだけ前へ補正。
+  // 全体のテンポや他パートの時刻は変えない。
+  const nextEvent = currentIndex < currentSong.length ? currentSong[currentIndex] : null;
+  if (
+    nextEvent &&
+    nextEvent.part === "木琴①" &&
+    Number(nextEvent.bar) >= 9
+  ) {
+    nextTarget -= 50;
+  }
+
   const wait = Math.max(0, nextTarget - Date.now());
 
   timer = setTimeout(scheduleNext, wait);
