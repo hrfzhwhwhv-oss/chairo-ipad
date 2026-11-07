@@ -43,14 +43,33 @@ prepareTeacherAudio.addEventListener("click", async () => {
 allStart.addEventListener("click", async () => {
   const cfg = window.CHAIRO_GOOGLE_SYNC || {};
   const startAt = Date.now() + Number(cfg.START_DELAY_MS || 3500);
+
+  // 先生画面で現在選ばれているテンポを取得
+  let selectedSpeed = 700;
+  speedChoices.forEach(button => {
+    if (button.classList.contains("selected")) {
+      selectedSpeed = Number(button.dataset.speed || 700);
+    }
+  });
+
+  // 先生の伴奏音源にも同じテンポを適用
+  const w = audioWindow();
+  if (w && typeof w.chairoTeacherSetSpeed === "function") {
+    w.chairoTeacherSetSpeed(selectedSpeed);
+  }
+
   setTimeout(() => {
-    const w = audioWindow();
-    if (w && typeof w.chairoTeacherStart === "function") w.chairoTeacherStart();
+    const aw = audioWindow();
+    if (aw && typeof aw.chairoTeacherStart === "function") aw.chairoTeacherStart();
     else clickAudio("#startButton");
   }, Math.max(0, startAt - Date.now()));
 
   try {
-    await window.ChairoGoogleSync.send("start", { startAt });
+    // スタート時に「開始時刻＋先生が選んだテンポ」を同時送信
+    await window.ChairoGoogleSync.send("start", {
+      startAt,
+      speed: selectedSpeed
+    });
   } catch (e) {
     teacherStatus.textContent = "送信できません";
   }
