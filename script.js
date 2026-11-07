@@ -350,11 +350,19 @@ function startSong() {
   if (accompanimentOn && currentIndex === 0) {
     runCountIn(() => {
       runIntro(() => {
-        // 練習モードでは先生用のカウント・前奏をすでに再生しているので、
-        // 曲データ先頭の合奏用24拍休みは飛ばす。
+        // 練習モードではカウント＋前奏を鳴らした後に本編を開始する。
+        // 合奏用として曲データ先頭に追加した24拍休みは飛ばす。
         while (currentIndex < currentSong.length && currentSong[currentIndex].leadIn) {
           currentIndex += 1;
         }
+
+        // 重要：
+        // カウント＋前奏の時間を本編の「遅れ」として扱わない。
+        // 前奏が終わったこの瞬間を、本編の絶対時刻0として再設定する。
+        absoluteTimelineStart = Date.now();
+        absoluteTimelineElapsed = 0;
+        playbackSpeed = Number(speed || 700);
+
         scheduleNext();
       });
     });
